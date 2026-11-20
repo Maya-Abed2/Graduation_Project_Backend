@@ -9,7 +9,7 @@ from core.auth import get_current_user
 
 router = APIRouter(prefix="/api", tags=["History & Limits"])
 
-# 1. API جلب قائمة السجلات الخاصة بالمستخدم الحالي
+
 @router.get("/history")
 def get_user_history(
     current_user: User = Depends(get_current_user),
@@ -30,7 +30,7 @@ def get_user_history(
         for h in histories
     ]
 
-# 2. API جلب تفاصيل محادثة أو تحليل فردي (مُعدل)
+
 @router.get("/history/{history_id}")
 def get_history_detail(
     history_id: int,
@@ -57,18 +57,18 @@ def get_history_detail(
         "created_at": entry.created_at.strftime("%Y-%m-%d %H:%M")
     }
 
-# 3. API معرفة حالة الاستهلاك الأسبوعي للمحامي والمتدرب
+
 @router.get("/lawyer/usage-status")
 def get_lawyer_usage_status(current_user: User = Depends(get_current_user)):
     user_role = getattr(current_user, 'role', None) or (current_user.get('role') if isinstance(current_user, dict) else None)
     
-    # 🌟 التعديل: السماح للمحامي والمتدرب فقط
+   
     if user_role not in ["lawyer", "trainee"]:
         raise HTTPException(status_code=403, detail="هذه الخاصية مخصصة للمحامين والمتدربين فقط")
         
     used = getattr(current_user, 'weekly_analysis_count', 0) if not isinstance(current_user, dict) else current_user.get('weekly_analysis_count', 0)
     
-    # 🌟 تحديد الحد (مثلاً 4 للمتدرب، وممكن نخليه للمحامي 4 أو غير محدود حسب نظامكم)
+   
     limit = WEEKLY_LIMIT_FOR_FREE_LAWYERS
     remaining = max(0, limit - used)
     
@@ -92,7 +92,7 @@ def get_lawyer_usage_status(current_user: User = Depends(get_current_user)):
         "remaining": remaining
     }
 
-# 4. API حذف عنصر محدد من السجل
+
 @router.delete("/history/{history_id}")
 def delete_history_item(
     history_id: int,
