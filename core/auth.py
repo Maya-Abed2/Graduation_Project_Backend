@@ -9,8 +9,8 @@ from sqlalchemy.orm import Session
 from database.session import get_db
 from database.models import User
 
-# المفتاح السري للتشفير
-SECRET_KEY = "your-super-secret-key-change-this-in-production"
+
+SECRET_KEY = "6765Hdse2456"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  
 
@@ -26,7 +26,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     except Exception:
         return False
 
-#تشفير كلمة السر
+
 def get_password_hash(password: str) -> str:
    
     password_bytes = password.encode('utf-8')[:72]
@@ -47,7 +47,7 @@ def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# 4. فنكشن لجلب المستخدم الحالي للحماية
+
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
