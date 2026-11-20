@@ -13,20 +13,19 @@ def split_text_by_articles(raw_documents: List[Document], law_name: str, categor
     تقوم هذه الدالة بتجميع نص القانون ثم تقطيعه بناءً على المواد القانونية (المادة 1، المادة 2...)
     مع حفظ البيانات الوصفية (Metadata) لكل مادة لضمان استرجاع دقيق.
     """
-    # 1. تجميع كامل النص مع الحفاظ على رقم الصفحة الأصلي
+   
     full_text = ""
     for doc in raw_documents:
         full_text += f"\n{doc.page_content}"
 
-    # 2. البحث عن أجزاء المواد باستخدام Regex
-    # النمط يتطابق مع: "المادة 1", "المادة (12)", "المادة 15 -"
+    
     pattern = r'(المادة\s*\(?\d+\)?[\s\S]*?)(?=(المادة\s*\(?\d+\)?|$))'
     matches = list(re.finditer(pattern, full_text))
 
     processed_docs = []
 
     if not matches:
-        # خيار احتياطي في حال لم يجد النمط صيغة "المادة X"
+        
         print(f"⚠️ لم يتم التعرف على نمط المواد التقليصي في ({law_name})، سيتم التقسيم بحسب الفقرات.")
         paragraphs = [p.strip() for p in full_text.split('\n\n') if len(p.strip()) > 30]
         for idx, para in enumerate(paragraphs):
