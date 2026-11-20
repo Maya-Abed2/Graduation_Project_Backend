@@ -10,7 +10,7 @@ from core.auth import get_password_hash, verify_password, create_access_token
 
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
-# التأكد من وجود مجلد التنزيلات
+
 UPLOAD_DIR = "uploads"
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
