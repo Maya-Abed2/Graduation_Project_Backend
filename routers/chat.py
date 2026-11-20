@@ -4,19 +4,18 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-# استيراد قاعدة البيانات والنماذج
+
 from database.session import get_db
 from database.models import User, ChatHistory
 
-# استيراد دالة الذكاء الاصطناعي/RAG
+
 from core.brain import get_legal_advice
 
-# استيراد دالة التوثيق لجلب المستخدم الحالي
 from core.auth import get_current_user
 
 router = APIRouter(prefix="/api/chat", tags=["Chat"])
 
-# نموذج استقبال السؤال من الفرونت إيند
+
 class ChatRequest(BaseModel):
     query: str
 
@@ -39,7 +38,7 @@ async def chat_query(
         print("Raw Result from Brain:", result)
         print("==================================================")
         
-        # 2. معالجة وتنسيق الإجابة والمصادر
+       
         if isinstance(result, dict):
             legal_advice = result.get("legal_advice") or result.get("answer") or result.get("response") or str(result)
             sources = result.get("sources") or result.get("context") or []
@@ -47,9 +46,9 @@ async def chat_query(
             legal_advice = str(result)
             sources = []
 
-        # 3. حفظ المحادثة في جدول ChatHistory بقاعدة البيانات
+        
         try:
-            # اقتطاع أول 30 حرف من السؤال ليصبح عنواناً للمحادثة
+           
             chat_title = user_query[:30] + "..." if len(user_query) > 30 else user_query
             
             new_history_entry = ChatHistory(
@@ -68,7 +67,7 @@ async def chat_query(
             db.rollback()
             print(f"⚠️ تحذير: لم يتم حفظ المحادثة في السجل: {hist_err}")
 
-        # 4. إرجاع النتيجة للفرونت إيند
+       
         return {
             "legal_advice": legal_advice,
             "sources": sources
