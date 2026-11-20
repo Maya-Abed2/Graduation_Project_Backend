@@ -26,7 +26,7 @@ def ask_legal_brain(user_query: str, retrieved_docs: list = None):
     print(f"Docs Received: {len(retrieved_docs) if retrieved_docs else 0}")
     print("=================================================\n")
 
-    # تجهيز السياق القانوني
+
     context_text = ""
     sources_list = []
 
